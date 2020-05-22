@@ -251,7 +251,6 @@ public:
 
     void CorrectLinks (std::string const& SelectedLink,
         std::vector<std::string>& ParsPages) {
-        std::regex RegularSelector{"^(?:(https?)://)([^/]+)(/.*)?" };
         std::smatch parts;
         std::regex_match(SelectedLink, parts, RegularSelector);
         std::string reference = parts[0];
@@ -289,7 +288,7 @@ public:
     loader& operator = (loader const&) = delete;
 
 private:
-    std::regex RegularSelector{"^(?:(https?)://)([^/]+)(/.*)?" };
+    std::regex RegularSelector{ "^(?:(https?)://)([^/]+)(/.*)?" };
     std::mutex mtx;
     boost::asio::io_context& ioc;
     std::vector<std::string> LinkVector;
