@@ -119,15 +119,14 @@ load_root_certificates(ssl::context& ctx, boost::system::error_code& ec)
         "9pWXTO9JrYMML7d+XRSZA1n3856OqZDX4403+9FnXCvfcLZLLKTBvwwFgEFGpzjK\n"
         "UEVbkhd5qstF6qWK\n"
         "-----END CERTIFICATE-----\n";
-        ;
 
     ctx.add_certificate_authority(
         boost::asio::buffer(cert.data(), cert.size()), ec);
-    if(ec)
+    if (ec)
         return;
 }
 
-} // detail
+} // namespace detail
 
 // Load the root certificates into an ssl::context
 
@@ -144,7 +143,7 @@ load_root_certificates(ssl::context& ctx)
 {
     boost::system::error_code ec;
     detail::load_root_certificates(ctx, ec);
-    if(ec)
+    if (ec)
         throw boost::system::system_error{ec};
 }
 
