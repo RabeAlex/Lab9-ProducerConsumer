@@ -4,17 +4,20 @@
 
 class loader {
 public:
-    loader(boost::asio::io_context& ioc_, std::vector<std::string>& url_, size_t& depth_,
+    loader(boost::asio::io_context& ioc_,
+    std::vector<std::string>& url_, size_t& depth_,
     size_t& network_threads_, size_t& parser_threads_, std::string& FileName_)
         : ioc(ioc_), LinkVector{ url_ }, depth(depth_),
-        network_threads(network_threads_),parser_threads(parser_threads_), FileName(FileName_)
+        network_threads(network_threads_),
+        parser_threads(parser_threads_), FileName(FileName_)
     {}
 
     void handler() {
         std::vector<std::vector<std::string>> ParsPagesLinks;
         std::vector<std::vector<std::string>> ParsPagesImage;
         while (depth--) {
-            std::vector<std::string> SelectedLinkVector; // in cases when Network is unreachable
+            std::vector<std::string> SelectedLinkVector;
+            // in cases when Network is unreachable
             PCqueue.clear();
             ParsPagesImage.clear();
             ParsPagesLinks.clear();
@@ -37,9 +40,11 @@ public:
             for (size_t a = 0; a < SelectedLinkVector.size(); ++a) {
                 for (size_t b = 0; b < ParsPagesLinks.size(); ++b) {
                     CorrectLinks(SelectedLinkVector.at(
-                            SelectedLinkVector.size() - 1 - a), ParsPagesLinks.at(b));
+                            SelectedLinkVector.size() - 1 - a),
+                            ParsPagesLinks.at(b));
                     CorrectLinks(SelectedLinkVector.at(
-                            SelectedLinkVector.size() - 1 - a), ParsPagesImage.at(b));
+                            SelectedLinkVector.size() - 1 - a),
+                            ParsPagesImage.at(b));
                 }
             }
 
@@ -61,13 +66,14 @@ public:
             std::cout << "File " << FileName << " not found!\n";
             exit(EXIT_FAILURE);
         }
-        out << "\n***********************************"
+        out << "\n******************************"
             << " Список из " << SelectedLinkVector.size()
-            << " просмотренных страниц: ***********************************\n\n";
+            << " просмотренных страниц: ******************************\n\n";
         for (size_t i = 0; i < ParsPagesLinks.size(); ++i) {
             out << "Ссылок: " << std::setw(5) << std::left
                 << ParsPagesLinks.at(i).size() << " для страницы: "
-                << SelectedLinkVector.at(SelectedLinkVector.size() - 1 - i) << '\n';
+                << SelectedLinkVector.at(SelectedLinkVector.size() - 1 - i)
+                << '\n';
             out << "Изображений: " << std::setw(5) << std::left
                 << ParsPagesImage.at(i).size() << "\n";
             for (auto const &str : ParsPagesImage.at(i)) {
@@ -81,7 +87,7 @@ public:
             std::vector<std::vector<std::string>>& PPL,
             std::vector<std::vector<std::string>>& PPI) {
         int QueueSize = PCqueue.size();
-        while(QueueSize){
+        while (QueueSize) {
             PPL.emplace_back();
             PPI.emplace_back();
             FindLinks(PPL.back(), PPI.back());
@@ -94,7 +100,7 @@ public:
     static void DuplicateRemoval(std::vector<std::string>& ParsPages) {
         std::set<std::string> NoDuplicate(ParsPages.begin(), ParsPages.end());
         ParsPages.clear();
-        for(auto const& element : NoDuplicate) {
+        for (auto const& element : NoDuplicate) {
             ParsPages.emplace_back(element);
         }
     }
@@ -244,7 +250,7 @@ public:
     }
 
     void CorrectLinks (std::string const& SelectedLink,
-                      std::vector<std::string>& ParsPages) {
+        std::vector<std::string>& ParsPages) {
         std::regex RegularSelector{"^(?:(https?)://)([^/]+)(/.*)?" };
         std::smatch parts;
         std::regex_match(SelectedLink, parts, RegularSelector);
@@ -252,24 +258,24 @@ public:
         std::string protocol = parts[1];
         std::string host = parts[2];
 
-        for (auto & str : ParsPages){
-            if(str.find("//") == 0) {
+        for (auto & str : ParsPages) {
+            if (str.find("//") == 0) {
                 str = protocol + ":" + str;
             } else if (str.find("/") == 0) {
                 str = protocol + "://" + host + str;
-            } else if(str.find("http") != 0 || str.find("https") != 0) {
+            } else if (str.find("http") != 0 || str.find("https") != 0) {
                 std::string r = reference;
                 int count = 0;
-                while(true) {
-                    if(str.find("../") != 0) {
+                while (true) {
+                    if (str.find("../") != 0) {
                         break;
                     }
                     ++count;
                     str.erase(0, 3);
                 }
-                while(count){
+                while (count) {
                     r.pop_back();
-                    while(r.back() != '/'){
+                    while (r.back() != '/') {
                         r.pop_back();
                     }
                     --count;
@@ -286,12 +292,12 @@ private:
     std::regex RegularSelector{"^(?:(https?)://)([^/]+)(/.*)?" };
     std::mutex mtx;
     boost::asio::io_context& ioc;
-    std::vector<std::string*> PCqueue;
     std::vector<std::string> LinkVector;
+    size_t depth;
     size_t network_threads;
     size_t parser_threads;
-    size_t depth;
     std::string FileName;
+        std::vector<std::string*> PCqueue;
 };
 
 int main(int argc, char** argv) {
