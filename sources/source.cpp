@@ -249,7 +249,7 @@ public:
         }
     }
 
-    void CorrectLinks (std::string const& SelectedLink,
+    void CorrectLinks(std::string const& SelectedLink,
         std::vector<std::string>& ParsPages) {
         std::smatch parts;
         std::regex_match(SelectedLink, parts, RegularSelector);

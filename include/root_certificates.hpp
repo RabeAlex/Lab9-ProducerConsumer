@@ -7,8 +7,8 @@
 // Official repository: https://github.com/boostorg/beast
 //
 
-#ifndef BOOST_BEAST_EXAMPLE_COMMON_ROOT_CERTIFICATES_HPP
-#define BOOST_BEAST_EXAMPLE_COMMON_ROOT_CERTIFICATES_HPP
+#ifndef INCLUDE_ROOT_CERTIFICATES_HPP_
+#define INCLUDE_ROOT_CERTIFICATES_HPP_
 
 #include <boost/asio/ssl.hpp>
 #include <string>
@@ -148,4 +148,4 @@ load_root_certificates(ssl::context& ctx)
         throw boost::system::system_error{ec};
 }
 
-#endif
+#endif  // INCLUDE_ROOT_CERTIFICATES_HPP_"
